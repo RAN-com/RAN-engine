@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { FavoritesProvider } from "./Components/FavoritesContext";
 import { AuthProvider, useAuth } from "./Components/AuthContext"; 
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./Components/Sidebar";
 import Home from "./components/Home";
-import Categories from "./components/Categories";
-import Cart from "./components/Cart";
-import Favorites from "./components/Favorites";
-import Footer from "./components/Footer";
-import ProductDetails from "./components/About";
-import Layout from "./components/Layout";
-import Navbar from "./components/Navbar";
+import Categories from "./Components/Categories";
+import Cart from "./Components/Cart";
+import Favorites from "./Components/Favorites";
+import Footer from "./Components/Footer";
+import ProductDetails from "./Components/About";
+import Layout from "./Components/Layout";
+import Navbar from "./Components/Navbar";
 import AdminPanel from "./Admin/Admin";
 import AdminLayout from "./Admin/AdminLayout";
 import AdminLogin from "./Admin/AdminLogin";
@@ -18,7 +18,7 @@ import AdminLogin from "./Admin/AdminLogin";
 
 const ProtectedRoute = ({ element }) => {
   const { user } = useAuth();
-  return user?.isAdmin ? element : <AdminLogin />;
+  return user?.isAdmin ? element : <AdminLogin />
 };
 
 const App = () => {
