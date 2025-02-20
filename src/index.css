@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@keyframes rgbAnimation {
+  0% { background-color: red; }
+  33% { background-color: green; }
+  66% { background-color: blue; }
+  100% { background-color: red; }
+}
+
+body {
+  animation: rgbAnimation 60s infinite linear;
+}
