@@ -12,7 +12,7 @@ import ProductDetails from "./Components/About";
 import Layout from "./Components/Layout";
 import Navbar from "./Components/Navbar";
 import AdminPanel from "./Admin/Admin";
-import AdminLayout from "./Admin/AdminLayout";
+import AdminLayout from "./Admin/Adminlayout";
 import AdminLogin from "./Admin/AdminLogin";
  // Admin login page
 
