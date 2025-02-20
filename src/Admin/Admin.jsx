@@ -131,7 +131,7 @@ const AdminPanel = ({ fetchGames }) => {
           {games.length === 0 ? (
             <tr>
               <td colSpan="5" className="border px-4 py-2 text-center">
-                No games available
+                No games 
               </td>
             </tr>
           ) : (
