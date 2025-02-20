@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { FavoritesProvider } from "./Components/FavoritesContext";
 import { AuthProvider, useAuth } from "./Components/AuthContext"; 
 import Sidebar from "./Components/Sidebar";
-import Home from "./components/Home";
+import Home from "./Components/Home";
 import Categories from "./Components/Categories";
 import Cart from "./Components/Cart";
 import Favorites from "./Components/Favorites";
