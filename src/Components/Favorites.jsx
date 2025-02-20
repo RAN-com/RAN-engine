@@ -1,6 +1,7 @@
 import { FaTrash } from "react-icons/fa";
 import { useFavorites } from "./FavoritesContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { db, collection, getDocs, deleteDoc, doc } from "./Firebase"; // Import Firestore methods
 
 const ITEMS_PER_PAGE = 9; // Show 9 items per page
 
@@ -8,15 +9,40 @@ const Favorites = () => {
   const { favorites, removeFromFavorites } = useFavorites();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [firebaseFavorites, setFirebaseFavorites] = useState([]);
+
+  // Fetch favorites from Firestore
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      const querySnapshot = await getDocs(collection(db, "favorites"));
+      const fetchedFavorites = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setFirebaseFavorites(fetchedFavorites);
+    };
+
+    fetchFavorites();
+  }, []); // Empty dependency array to fetch only once on mount
 
   // Filter favorites based on search query
-  const filteredFavorites = favorites.filter((product) =>
+  const filteredFavorites = firebaseFavorites.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredFavorites.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const displayedFavorites = filteredFavorites.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  // Function to remove favorite from Firestore
+  const handleRemoveFavorite = async (productId) => {
+    try {
+      await deleteDoc(doc(db, "favorites", productId));
+      setFirebaseFavorites(firebaseFavorites.filter((product) => product.id !== productId));
+    } catch (error) {
+      console.error("Error removing favorite: ", error);
+    }
+  };
 
   return (
     <section className="py-10 px-2 bg-gray-900 h-full text-white text-center">
@@ -48,7 +74,7 @@ const Favorites = () => {
                 <div className="flex justify-between items-center mt-4">
                   <span className="text-yellow-500 font-bold">${product.price.toFixed(2)}</span>
                   <button
-                    onClick={() => removeFromFavorites(product.id)}
+                    onClick={() => handleRemoveFavorite(product.id)}
                     className="text-red-500 hover:text-red-700"
                   >
                     <FaTrash />
