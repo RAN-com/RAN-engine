@@ -8,11 +8,11 @@ const Layout = () => {
     return (
   <div>
     
-     <Home/>
+    
      
      <Categories/>
 
-
+     <Home/>
 
   </div>
     );
