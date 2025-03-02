@@ -48,7 +48,7 @@ const Favorites = () => {
   };
 
   return (
-    <section className="py-10 px-2 bg-gray-900 h-full text-white text-center">
+    <section className="py-10 px-2 bg-gray-900 h-auto text-white text-center">
       <h2 className="text-2xl font-bold mb-5 border-b-4 border-red-500 w-40 mx-auto">My Favorites</h2>
 
       {/* Search Input */}

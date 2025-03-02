@@ -73,7 +73,7 @@ const Home = () => {
         loop={true}
         autoplay={{ delay: 3000 }}
         navigation
-        pagination={{ clickable: true }}
+        pagination={{ clickable: false }}
         breakpoints={{
           640: { slidesPerView: 2 },
           1024: { slidesPerView: 3 },

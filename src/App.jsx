@@ -41,6 +41,7 @@ const App = () => {
             <div className="flex-1 overflow-auto p-5">
               <Routes>
                 <Route path="/" element={<Layout />} />
+                <Route path="/home" element={<Home />} />
                 <Route path="/categories" element={<Categories addToCart={addToCart} />} />
                 <Route path="/cart" element={<Cart cart={cart} />} />
                 <Route path="/favorites" element={<Favorites />} />
