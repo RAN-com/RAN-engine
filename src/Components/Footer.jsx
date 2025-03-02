@@ -22,10 +22,9 @@ const Footer = () => {
               Quick Links
             </h3>
             <ul className="text-gray-400 space-y-2 text-sm">
-              <li><a href="#" className="hover:text-red-500 transition">Home</a></li>
-              <li><a href="#" className="hover:text-red-500 transition">Games</a></li>
-              <li><a href="#" className="hover:text-red-500 transition">News</a></li>
-              <li><a href="#" className="hover:text-red-500 transition">Contact</a></li>
+              <li><a href="/Home" className="hover:text-red-500 transition">Home</a></li>
+              <li><a href="/" className="hover:text-red-500 transition">Games</a></li>
+          
             </ul>
           </div>
 

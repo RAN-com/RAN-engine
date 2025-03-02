@@ -10,3 +10,8 @@
 body {
   animation: rgbAnimation 60s infinite linear;
 }
+.sidebar-bg {
+  background: url('/https://www.yudiz.com/codepen/expandable-animated-card-slider/far-cry-5.jpg') no-repeat center center;
+  background-size: cover;
+  backdrop-filter: blur(8px); /* Optional: Adds a blur effect */
+}

@@ -1,161 +1,105 @@
 import { useState, useEffect } from "react";
-import { db, collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from "../Components/Firebase"; // Added deleteDoc, doc, and updateDoc
+import { db, collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from "../Components/Firebase";
 
-const AdminPanel = ({ fetchGames }) => {
-  const [newGame, setNewGame] = useState({
-    name: "",
-    image: "",
-    description: "",
-    price: "",
-  });
+const AdminPanel = () => {
+  const [newVideo, setNewVideo] = useState({ title: "", thumbnail: "", description: "", url: "" });
+  const [videos, setVideos] = useState([]);
+  const [editingVideo, setEditingVideo] = useState(null);
+
+  const [newGame, setNewGame] = useState({ name: "", image: "", description: "", price: "" });
   const [games, setGames] = useState([]);
-  const [editingGame, setEditingGame] = useState(null); // State to track the game being edited
-
-  // Fetch all games from Firestore
-  const fetchAllGames = async () => {
-    const querySnapshot = await getDocs(collection(db, "games"));
-    const gamesList = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    setGames(gamesList);
-  };
+  const [editingGame, setEditingGame] = useState(null);
 
   useEffect(() => {
+    fetchAllVideos();
     fetchAllGames();
   }, []);
 
-  // Function to Add a Game
-  const handleAddGame = async (e) => {
+  const fetchAllVideos = async () => {
+    const querySnapshot = await getDocs(collection(db, "videos"));
+    setVideos(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+  };
+
+  const fetchAllGames = async () => {
+    const querySnapshot = await getDocs(collection(db, "games"));
+    setGames(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+  };
+
+  const handleVideoSubmit = async (e) => {
     e.preventDefault();
-    if (!newGame.name || !newGame.image || !newGame.description || !newGame.price) {
-      alert("All fields are required");
-      return;
+    if (!newVideo.title || !newVideo.thumbnail || !newVideo.description || !newVideo.url) return alert("All fields are required");
+    
+    if (editingVideo) {
+      await updateDoc(doc(db, "videos", newVideo.id), newVideo);
+      setEditingVideo(null);
+    } else {
+      await addDoc(collection(db, "videos"), newVideo);
     }
+    setNewVideo({ title: "", thumbnail: "", description: "", url: "" });
+    fetchAllVideos();
+  };
 
-    // Add new game to Firestore
-    await addDoc(collection(db, "games"), {
-      name: newGame.name,
-      image: newGame.image,
-      description: newGame.description,
-      price: parseFloat(newGame.price),
-    });
+  const handleDeleteVideo = async (id) => {
+    await deleteDoc(doc(db, "videos", id));
+    fetchAllVideos();
+  };
 
-    // Reset form and fetch games
+  const handleGameSubmit = async (e) => {
+    e.preventDefault();
+    if (!newGame.name || !newGame.image || !newGame.description || !newGame.price) return alert("All fields are required");
+    
+    if (editingGame) {
+      await updateDoc(doc(db, "games", newGame.id), newGame);
+      setEditingGame(null);
+    } else {
+      await addDoc(collection(db, "games"), { ...newGame, price: parseFloat(newGame.price) });
+    }
     setNewGame({ name: "", image: "", description: "", price: "" });
     fetchAllGames();
   };
 
-  // Function to Edit a Game
-  const handleEditGame = (game) => {
-    setEditingGame(game); // Set the game to be edited
-    setNewGame(game); // Pre-fill the form with the game's data
-  };
-
-  // Function to Save Edited Game
-  const handleSaveEditedGame = async (e) => {
-    e.preventDefault();
-    if (!newGame.name || !newGame.image || !newGame.description || !newGame.price) {
-      alert("All fields are required");
-      return;
-    }
-
-    // Update the game in Firestore
-    const gameDocRef = doc(db, "games", newGame.id);
-    await updateDoc(gameDocRef, {
-      name: newGame.name,
-      image: newGame.image,
-      description: newGame.description,
-      price: parseFloat(newGame.price),
-    });
-
-    // Reset form and fetch games
-    setEditingGame(null);
-    setNewGame({ name: "", image: "", description: "", price: "" });
-    fetchAllGames();
-  };
-
-  // Function to Delete a Game
   const handleDeleteGame = async (id) => {
-    const gameDocRef = doc(db, "games", id);
-    await deleteDoc(gameDocRef);
-    fetchAllGames(); // Fetch updated list after deletion
+    await deleteDoc(doc(db, "games", id));
+    fetchAllGames();
   };
 
   return (
     <div className="bg-gray-800 p-4 rounded-lg my-4 text-white">
-      <h3 className="text-lg font-semibold mb-2">{editingGame ? "Edit Game" : "Add New Game"}</h3>
-      <form onSubmit={editingGame ? handleSaveEditedGame : handleAddGame}>
-        <input
-          type="text"
-          placeholder="Game Name"
-          value={newGame.name}
-          onChange={(e) => setNewGame({ ...newGame, name: e.target.value })}
-          className="w-full mb-2 px-3 placeholder-white py-2 text-black rounded"
-        />
-        <input
-          type="text"
-          placeholder="Image URL"
-          value={newGame.image}
-          onChange={(e) => setNewGame({ ...newGame, image: e.target.value })}
-          className="w-full mb-2 px-3 py-2 placeholder-white text-black rounded"
-        />
-        <input
-          type="text"
-          placeholder="Description"
-          value={newGame.description}
-          onChange={(e) => setNewGame({ ...newGame, description: e.target.value })}
-          className="w-full mb-2 px-3 py-2 placeholder-white text-black rounded"
-        />
-        <input
-          type="number"
-          placeholder="Price"
-          value={newGame.price}
-          onChange={(e) => setNewGame({ ...newGame, price: e.target.value })}
-          className="w-full mb-2 px-3 py-2 placeholder-white text-black rounded"
-        />
-        <button type="submit" className="bg-green-500 px-4 py-2 rounded text-white">
-          {editingGame ? "Save Changes" : "Add Game"}
-        </button>
+      <h3 className="text-lg font-semibold mb-2">{editingVideo ? "Edit Video" : "Add New Video"}</h3>
+      <form onSubmit={handleVideoSubmit} className="mb-4">
+        <input type="text" placeholder="Title" value={newVideo.title} onChange={(e) => setNewVideo({ ...newVideo, title: e.target.value })} className="w-full mb-2 p-2" />
+        <input type="text" placeholder="Thumbnail" value={newVideo.thumbnail} onChange={(e) => setNewVideo({ ...newVideo, thumbnail: e.target.value })} className="w-full mb-2 p-2" />
+        <input type="text" placeholder="Description" value={newVideo.description} onChange={(e) => setNewVideo({ ...newVideo, description: e.target.value })} className="w-full mb-2 p-2" />
+        <input type="text" placeholder="URL" value={newVideo.url} onChange={(e) => setNewVideo({ ...newVideo, url: e.target.value })} className="w-full mb-2 p-2" />
+        <button type="submit" className="bg-green-500 p-2 rounded">{editingVideo ? "Save Changes" : "Add Video"}</button>
       </form>
+      <h3 className="text-lg font-semibold">Video List</h3>
+      <ul>
+        {videos.map((video) => (
+          <li key={video.id} className="mb-2">
+            {video.title} - <button onClick={() => setEditingVideo(video)} className="bg-blue-500 p-1 rounded">Edit</button>
+            <button onClick={() => handleDeleteVideo(video.id)} className="bg-red-500 p-1 ml-2 rounded">Delete</button>
+          </li>
+        ))}
+      </ul>
 
-      <h3 className="text-lg font-semibold mt-4">Product List</h3>
-      <table className="w-full mt-4 table-auto border-collapse border border-gray-700">
-        <thead>
-          <tr>
-            <th className="border px-4 py-2">Game Name</th>
-            <th className="border px-4 py-2">Description</th>
-            <th className="border px-4 py-2">Price</th>
-            <th className="border px-4 py-2">Image</th>
-            <th className="border px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {games.length === 0 ? (
-            <tr>
-              <td colSpan="5" className="border px-4 py-2 text-center">
-                No games 
-              </td>
-            </tr>
-          ) : (
-            games.map((game) => (
-              <tr key={game.id}>
-                <td className="border px-4 py-2">{game.name}</td>
-                <td className="border px-4 py-2">{game.description}</td>
-                <td className="border px-4 py-2">${game.price.toFixed(2)}</td>
-                <td className="border px-4 py-2">
-                  <img src={game.image} alt={game.name} className="w-12 h-12 object-cover" />
-                </td>
-                <td className="border px-4 py-2">
-                  <button onClick={() => handleEditGame(game)} className="bg-blue-500 px-4 py-2 text-white rounded mr-2">
-                    Edit
-                  </button>
-                  <button onClick={() => handleDeleteGame(game.id)} className="bg-red-500 px-4 py-2 text-white rounded">
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+      <h3 className="text-lg font-semibold mt-4">{editingGame ? "Edit Game" : "Add New Game"}</h3>
+      <form onSubmit={handleGameSubmit} className="mb-4">
+        <input type="text" placeholder="Name" value={newGame.name} onChange={(e) => setNewGame({ ...newGame, name: e.target.value })} className="w-full mb-2 p-2" />
+        <input type="text" placeholder="Image" value={newGame.image} onChange={(e) => setNewGame({ ...newGame, image: e.target.value })} className="w-full mb-2 p-2" />
+        <input type="text" placeholder="Description" value={newGame.description} onChange={(e) => setNewGame({ ...newGame, description: e.target.value })} className="w-full mb-2 p-2" />
+        <input type="number" placeholder="Price" value={newGame.price} onChange={(e) => setNewGame({ ...newGame, price: e.target.value })} className="w-full mb-2 p-2" />
+        <button type="submit" className="bg-green-500 p-2 rounded">{editingGame ? "Save Changes" : "Add Game"}</button>
+      </form>
+      <h3 className="text-lg font-semibold">Game List</h3>
+      <ul>
+        {games.map((game) => (
+          <li key={game.id} className="mb-2">
+            {game.name} - <button onClick={() => setEditingGame(game)} className="bg-blue-500 p-1 rounded">Edit</button>
+            <button onClick={() => handleDeleteGame(game.id)} className="bg-red-500 p-1 ml-2 rounded">Delete</button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

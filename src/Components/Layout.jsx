@@ -1,5 +1,6 @@
 
 import Categories from "./Categories";
+
 import ComingSoon from "./ComingSoon";
 import Home from "./Home";
 
@@ -11,7 +12,7 @@ const Layout = () => {
     
      
      <Categories/>
-
+      
      <Home/>
 
   </div>

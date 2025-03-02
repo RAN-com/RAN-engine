@@ -2,12 +2,11 @@ import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useFavorites } from "./FavoritesContext";
 import { useState, useEffect } from "react";
-import { db, collection, getDocs, deleteDoc, doc } from "./Firebase";
 import logo from '../assets/RanGamingLogo.png';
 
 const ITEMS_PER_PAGE = 9;
 
-const Categories = () => {
+const Prototypes = () => {
   const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
   const [games, setGames] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,8 +17,11 @@ const Categories = () => {
   }, []);
 
   const fetchGames = async () => {
-    const querySnapshot = await getDocs(collection(db, "games"));
-    const gamesList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    // Simulated data fetching
+    const gamesList = [
+      { id: "1", name: "Game 1", description: "Description 1", price: 19.99, image: "game1.jpg" },
+      { id: "2", name: "Game 2", description: "Description 2", price: 29.99, image: "game2.jpg" }
+    ];
     setGames(gamesList);
   };
 
@@ -54,7 +56,7 @@ const Categories = () => {
 
           return (
             <div key={game.id} className="w-full bg-gray-800 text-white p-5 rounded-lg shadow-lg">
-              <Link to={`/product/${game.id}`}>
+              <Link to={`/proto/${game.id}`}>
                 <img src={game.image} alt={game.name} className="w-full h-40 object-cover rounded-lg" />
                 <h4 className="text-lg font-semibold mt-3">{game.name}</h4>
                 <p className="text-sm text-gray-400">{game.description}</p>
@@ -82,4 +84,4 @@ const Categories = () => {
   );
 };
 
-export default Categories;
+export default Prototypes;

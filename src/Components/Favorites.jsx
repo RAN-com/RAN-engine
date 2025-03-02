@@ -1,44 +1,47 @@
 import { FaTrash } from "react-icons/fa";
 import { useFavorites } from "./FavoritesContext";
 import { useState, useEffect } from "react";
-import { db, collection, getDocs, deleteDoc, doc } from "./Firebase"; // Import Firestore methods
+import { db, collection, getDocs, deleteDoc, doc } from "../Components/Firebase";
+import { Link } from "react-router-dom";
 
-const ITEMS_PER_PAGE = 9; // Show 9 items per page
+const ITEMS_PER_PAGE = 9;
 
 const Favorites = () => {
-  const { favorites, removeFromFavorites } = useFavorites();
+  const { removeFromFavorites } = useFavorites();
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [searchQuery, setSearchQuery] = useState("");
   const [firebaseFavorites, setFirebaseFavorites] = useState([]);
 
-  // Fetch favorites from Firestore
   useEffect(() => {
     const fetchFavorites = async () => {
-      const querySnapshot = await getDocs(collection(db, "favorites"));
-      const fetchedFavorites = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setFirebaseFavorites(fetchedFavorites);
+      try {
+        const querySnapshot = await getDocs(collection(db, "favorites"));
+        setFirebaseFavorites(
+          querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+        );
+      } catch (error) {
+        console.error("Error fetching favorites: ", error);
+      }
     };
 
     fetchFavorites();
-  }, []); // Empty dependency array to fetch only once on mount
+  }, []);
 
-  // Filter favorites based on search query
-  const filteredFavorites = firebaseFavorites.filter((product) =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredFavorites = firebaseFavorites.filter((game) =>
+    game.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredFavorites.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const displayedFavorites = filteredFavorites.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  // Function to remove favorite from Firestore
-  const handleRemoveFavorite = async (productId) => {
+  const handleRemoveFavorite = async (gameId) => {
     try {
-      await deleteDoc(doc(db, "favorites", productId));
-      setFirebaseFavorites(firebaseFavorites.filter((product) => product.id !== productId));
+      await deleteDoc(doc(db, "favorites", gameId));
+      setFirebaseFavorites(firebaseFavorites.filter((game) => game.id !== gameId));
     } catch (error) {
       console.error("Error removing favorite: ", error);
     }
@@ -62,21 +65,16 @@ const Favorites = () => {
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4">
-            {displayedFavorites.map((product) => (
-              <div key={product.id} className="w-full bg-gray-800 text-white p-5 rounded-lg shadow-lg">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-40 object-cover rounded-lg"
-                />
-                <h4 className="text-lg font-semibold mt-3">{product.name}</h4>
-                <p className="text-sm text-gray-400">{product.description}</p>
+            {displayedFavorites.map((game) => (
+              <div key={game.id} className="w-full bg-gray-800 text-white p-5 rounded-lg shadow-lg">
+                <Link to={`/game/${game.id}`}>
+                  <img src={game.image} alt={game.name || "Unnamed"} className="w-full h-40 object-cover rounded-lg" />
+                  <h4 className="text-lg font-semibold mt-3">{game.name || "Unnamed"}</h4>
+                  <p className="text-sm text-gray-400">{game.description || "No description available."}</p>
+                </Link>
                 <div className="flex justify-between items-center mt-4">
-                  <span className="text-yellow-500 font-bold">${product.price.toFixed(2)}</span>
-                  <button
-                    onClick={() => handleRemoveFavorite(product.id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
+                  <span className="text-yellow-500 font-bold">${game.price?.toFixed(2) || "0.00"}</span>
+                  <button onClick={() => handleRemoveFavorite(game.id)} className="text-red-500 hover:text-red-700">
                     <FaTrash />
                   </button>
                 </div>

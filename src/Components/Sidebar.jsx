@@ -1,10 +1,10 @@
 import { NavLink } from "react-router-dom";
-import { ShoppingCart, Heart, LogIn, LogOut, ChevronLeft, ChevronRight, Home, User } from "lucide-react";
+import { ShoppingCart, Heart, LogIn, LogOut, ChevronLeft, ChevronRight, Home, User,Tv } from "lucide-react";
 import { useState, useEffect } from "react";
 import { auth } from "./Firebase"; // Import Firebase authentication
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import Auth from "./Auth";
-import Logo from "../assets/Ran Gaming Logo.png";
+import Logo from "../assets/RanGamingLogo.png";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(window.innerWidth > 768);
@@ -38,7 +38,7 @@ const Sidebar = () => {
     <>
       <Auth isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
 
-      {/* Desktop Sidebar */}
+  
       {!isMobile && (
         <div
           className={`relative text-white ${
@@ -70,14 +70,6 @@ const Sidebar = () => {
               <Home size={20} /> {isOpen && <span>Home</span>}
             </NavLink>
             <NavLink
-              to="/cart"
-              className={({ isActive }) =>
-                `flex items-center space-x-2 p-2 rounded-lg ${isActive ? "bg-gray-700" : "hover:bg-gray-700"}`
-              }
-            >
-              <ShoppingCart size={20} /> {isOpen && <span>My Cart</span>}
-            </NavLink>
-            <NavLink
               to="/favorites"
               className={({ isActive }) =>
                 `flex items-center space-x-2 p-2 rounded-lg ${isActive ? "bg-gray-700" : "hover:bg-gray-700"}`
@@ -85,6 +77,22 @@ const Sidebar = () => {
             >
               <Heart size={20} /> {isOpen && <span>My Favorites</span>}
             </NavLink>
+            <NavLink
+              to="/cart"
+              className={({ isActive }) =>
+                `flex items-center space-x-2 p-2 rounded-lg ${isActive ? "bg-gray-700" : "hover:bg-gray-700"}`
+              }
+            >
+              <ShoppingCart size={20} /> {isOpen && <span>My Cart</span>}
+            </NavLink>
+            {/* <NavLink
+  to="/channel"
+  className={({ isActive }) =>
+    `flex items-center space-x-2 p-2 rounded-lg ${isActive ? "bg-gray-700" : "hover:bg-gray-700"}`
+  }
+>
+  <Tv size={20} /> {isOpen && <span>Channel</span>}
+</NavLink> */}
           </nav>
 
           {/* Auth Section */}
@@ -140,6 +148,16 @@ const Sidebar = () => {
             <Heart size={24} />
             <span className="text-sm">Favorites</span>
           </NavLink>
+          {/* <NavLink
+            to="/Channel"
+            className={({ isActive }) =>
+              `flex flex-col items-center ${isActive ? "text-yellow-400" : "text-white"}`
+            }
+          >
+            <Tv size={24} />
+            <span className="text-sm">Channel</span>
+          </NavLink>
+           */}
           <div className="relative">
             {user ? (
               <button onClick={handleLogout} className="flex flex-col items-center text-white">

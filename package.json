@@ -20,6 +20,7 @@
     "react-owl-carousel": "^2.3.3",
     "react-router-dom": "^7.2.0",
     "react-spinners": "^0.15.0",
+    "react-toastify": "^11.0.5",
     "swiper": "^11.2.4",
     "tailwindcss": "^4.0.7"
   },
