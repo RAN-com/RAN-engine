@@ -71,15 +71,15 @@ export default function App() {
 
   
 
-  <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer">
+  <a href="https://github.com/RAN-com" target="_blank" rel="noopener noreferrer">
     <FaGithub className="text-red-500 hover:text-white hover:scale-125 transition duration-300 cursor-pointer" />
   </a>
 
-  <a href="https://youtube.com/@yourchannel" target="_blank" rel="noopener noreferrer">
+  <a href="https://www.youtube.com/@WebCodingJr" target="_blank" rel="noopener noreferrer">
     <FaYoutube className="text-red-500 hover:text-white hover:scale-125 transition duration-300 cursor-pointer" />
   </a>
 
-  <a href="https://instagram.com/yourusername" target="_blank" rel="noopener noreferrer">
+  <a href="https://www.instagram.com/ran_game_engine/" target="_blank" rel="noopener noreferrer">
     <FaInstagram className="text-red-500 hover:text-white hover:scale-125 transition duration-300 cursor-pointer" />
   </a>
 
