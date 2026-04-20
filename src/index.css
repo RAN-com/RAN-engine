@@ -1,17 +1,19 @@
 @import "tailwindcss";
 
-@keyframes rgbAnimation {
-  0% { background-color: red; }
-  33% { background-color: green; }
-  66% { background-color: blue; }
-  100% { background-color: red; }
+@keyframes purpleRGB {
+  0%   { background-color: #2e1065; } /* deep purple */
+  10%  { background-color: #4c1d95; }
+  20%  { background-color: #6d28d9; }
+  30%  { background-color: #7c3aed; }
+  40%  { background-color: #8b5cf6; }
+  50%  { background-color: #a855f7; } /* bright purple */
+  60%  { background-color: #9333ea; }
+  70%  { background-color: #7e22ce; }
+  80%  { background-color: #5b21b6; }
+  90%  { background-color: #3b0764; }
+  100% { background-color: #2e1065; } /* loop back */
 }
 
 body {
-  animation: rgbAnimation 60s infinite linear;
-}
-.sidebar-bg {
-  background: url('/https://www.yudiz.com/codepen/expandable-animated-card-slider/far-cry-5.jpg') no-repeat center center;
-  background-size: cover;
-  backdrop-filter: blur(8px); /* Optional: Adds a blur effect */
+  animation: purpleRGB 15s ease-in-out infinite;
 }
