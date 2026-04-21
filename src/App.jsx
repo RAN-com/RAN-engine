@@ -68,10 +68,7 @@ export default function App() {
       <main>
         <Home typewriterText={text} />
         <About />
-        {/* <Services />
-        <Portfolio />
-        <Blog />
-        <Testimonial /> */}
+     
       </main>
     </div>
   );
